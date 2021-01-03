@@ -27,6 +27,27 @@ TEST(TestMatch, SimpleLiteralMatch)
     EXPECT_TRUE(match(regex, input));
 }
 
+TEST(TestMatch, StartMatch)
+{
+    std::string regex, input;
+
+    regex = "^abc";
+    input = "aabc";
+    EXPECT_FALSE(match(regex, input));
+
+    regex = "^abc";
+    input = "abc";
+    EXPECT_TRUE(match(regex, input));
+
+    regex = "^abc";
+    input = "abcedfg";
+    EXPECT_TRUE(match(regex, input));
+
+    regex = "^abc";
+    input = "baab";
+    EXPECT_FALSE(match(regex, input));
+}
+
 int main(int argc, char** argv)
 {
     ::testing::InitGoogleTest(&argc, argv);
