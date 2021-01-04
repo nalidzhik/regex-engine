@@ -48,6 +48,35 @@ TEST(TestMatch, StartMatch)
     EXPECT_FALSE(match(regex, input));
 }
 
+TEST(TestMatch, DotMatch)
+{
+    std::string regex, input;
+
+    regex = "a.c";
+    input = "abc";
+    EXPECT_TRUE(match(regex, input));
+
+    regex = "b.a";
+    input = "abba";
+    EXPECT_TRUE(match(regex, input));
+
+    regex = ".e";
+    input = "abcedfg";
+    EXPECT_TRUE(match(regex, input));
+
+    regex = ".ba";
+    input = "baab";
+    EXPECT_FALSE(match(regex, input));
+
+    regex = "a.c.";
+    input = "abc";
+    EXPECT_FALSE(match(regex, input));
+
+    regex = "...b";
+    input = "baab";
+    EXPECT_TRUE(match(regex, input));
+}
+
 int main(int argc, char** argv)
 {
     ::testing::InitGoogleTest(&argc, argv);

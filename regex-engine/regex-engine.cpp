@@ -5,14 +5,58 @@
 
 using namespace std;
 
+bool isLiteral(char ch)
+{
+	return isalnum(ch);
+}
+
 bool isStart(char ch)
 {
 	return ch == '^';
 }
 
+bool isDot(char ch)
+{
+	return ch == '.';
+}
+
+bool isPlus(char ch)
+{
+	return ch == '+';
+}
+
+bool isStar(char ch)
+{
+	return ch == '*';
+}
+
+bool isQuestion(char ch)
+{
+	return ch == '?';
+}
+
+bool isUnit(string term)
+{
+	return isLiteral(term[0]) || isDot(term[0]);
+}
+
 bool doesUnitMatch(string& regex, string& input)
 {
-	return regex[0] == input[0];
+	if (input.size() == 0)
+	{
+		return false;
+	 }
+
+	if (isLiteral(regex[0]))
+	{
+		return regex[0] == input[0];
+	}
+	else if (isDot(regex[0]))
+	{
+		return true;
+	}
+	
+	return false;
 }
 
 bool matchRegex(string& regex, string& input)
@@ -22,11 +66,14 @@ bool matchRegex(string& regex, string& input)
 		return true;
 	}
 
-	if (doesUnitMatch(regex, input))
+	if (isUnit(regex))
 	{
-		string regexRest = regex.substr(1);
-		string inputRest = input.substr(1);
-		return matchRegex(regexRest, inputRest);
+		if (doesUnitMatch(regex, input))
+		{
+			string regexRest = regex.substr(1);
+			string inputRest = input.substr(1);
+			return matchRegex(regexRest, inputRest);
+		}
 	}
 
 	return false;

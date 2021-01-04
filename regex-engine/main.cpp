@@ -7,7 +7,7 @@ using namespace std;
 
 int main()
 {
-	string regex = "^abc";
+	string regex = "a.c.";
 	string input = "abc";
 
 	cout << match(regex, input) << endl;
