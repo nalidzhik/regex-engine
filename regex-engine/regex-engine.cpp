@@ -15,16 +15,10 @@ bool isStart(char ch)
 	return ch == '^';
 }
 
-bool isDot(char ch)
-{
-	return ch == '.';
-}
-
 bool isPlus(char ch)
 {
 	return ch == '+';
 }
-
 bool isStar(char ch)
 {
 	return ch == '*';
@@ -35,17 +29,83 @@ bool isQuestion(char ch)
 	return ch == '?';
 }
 
+bool isOperator(char ch)
+{
+	return isStar(ch) || isPlus(ch) || isQuestion(ch);
+}
+
+bool isDot(char ch)
+{
+	return ch == '.';
+}
+
+bool isEscape(char ch)
+{
+	return ch == '\\';
+}
+
+bool isEscapeSequence(char term)
+{
+	return isEscape(term);
+}
+
 bool isUnit(string term)
 {
 	return isLiteral(term[0]) || isDot(term[0]);
 }
 
+struct splitResult
+{
+	char head;
+	char oper;
+	string rest;
+};
+
+splitResult splitRegex(string& regex)
+{
+	int lastRegexPos = 0;
+	char oper = '\0';
+	splitResult result;
+
+	if (isEscape(regex[0]))
+	{
+		lastRegexPos += 2;
+		char head = regex[2];
+
+		result.head = head;
+	}
+	else
+	{
+		lastRegexPos = 1;
+		char head = regex[0];
+
+		result.head = head;
+	}
+
+	if (lastRegexPos < regex.size() && isOperator(regex[lastRegexPos]))
+	{
+		oper = regex[lastRegexPos];
+		lastRegexPos += 1;
+
+	}
+	string rest = regex.substr(lastRegexPos);
+
+	result.oper = oper;
+	result.rest = rest;
+
+
+	return result;
+}
+
 bool doesUnitMatch(string& regex, string& input)
 {
+	splitResult result = splitRegex(regex);
+
+	char head = result.head;
 	if (input.size() == 0)
 	{
 		return false;
-	 }
+	}
 
 	if (isLiteral(regex[0]))
 	{
@@ -55,8 +115,60 @@ bool doesUnitMatch(string& regex, string& input)
 	{
 		return true;
 	}
-	
+	else if (isEscapeSequence(head))
+	{
+
+	}
+
 	return false;
+}
+
+
+
+bool matchMultiple(string& regex, string& input, int minMatchLength, int maxMatchLength)
+{
+	splitResult result = splitRegex(regex);
+
+	if (minMatchLength < 0)
+	{
+		minMatchLength = 0;
+	}
+
+	int submatchLength = -1;
+
+	while (maxMatchLength == -1 || submatchLength < maxMatchLength)
+	{
+		string newRegex = string(submatchLength + 1, result.head);
+		bool subexprMatched = matchRegex(newRegex, input);
+
+		if (subexprMatched)
+		{
+			submatchLength += 1;
+		}
+		else
+		{
+			break;
+		}
+	}
+
+	while (submatchLength >= minMatchLength)
+	{
+		string newRegex = string(submatchLength, result.head) + result.rest;
+		bool matched = matchRegex(newRegex, input);
+		if (matched)
+		{
+			return matched;
+		}
+
+		submatchLength -= 1;
+	}
+
+	return false;
+}
+
+bool matchStar(string& regex, string& input)
+{
+	return matchMultiple(regex, input, -1, -1);
 }
 
 bool matchRegex(string& regex, string& input)
@@ -64,6 +176,13 @@ bool matchRegex(string& regex, string& input)
 	if (regex.size() == 0)
 	{
 		return true;
+	}
+
+	splitResult result = splitRegex(regex);
+
+	if (isStar(result.oper))
+	{
+		return matchStar(regex, input);
 	}
 
 	if (isUnit(regex))
@@ -87,8 +206,8 @@ bool match(string& regex, string& input)
 	int maxMatchPos;
 	if (isStart(regex[0]))
 	{
-		maxMatchPos=0;
-		regex=regex.substr(1);
+		maxMatchPos = 0;
+		regex = regex.substr(1);
 	}
 	else
 	{
