@@ -7,8 +7,8 @@ using namespace std;
 
 int main()
 {
-	string regex = "a+";
-	string input = "aaaa";
+	string regex = "c?ba";
+	string input = "cba";
 
 	cout << match(regex, input) << endl;
 

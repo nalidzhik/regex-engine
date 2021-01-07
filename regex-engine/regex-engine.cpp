@@ -176,6 +176,11 @@ bool matchPlus(string& regex, string& input)
 	return matchMultiple(regex, input, 1, -1);
 }
 
+bool matchQuestion(string& regex, string& input)
+{
+	return matchMultiple(regex, input, 0, 1);
+}
+
 bool matchRegex(string& regex, string& input)
 {
 	if (regex.size() == 0)
@@ -192,6 +197,10 @@ bool matchRegex(string& regex, string& input)
 	else if (isPlus(result.oper))
 	{
 		return matchPlus(regex, input);
+	}
+	else if (isQuestion(result.oper))
+	{
+		return matchQuestion(regex, input);
 	}
 
 	if (isUnit(regex))
