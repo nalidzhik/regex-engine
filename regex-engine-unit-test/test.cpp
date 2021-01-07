@@ -106,6 +106,30 @@ TEST(TestMatch, StarMatch)
 	EXPECT_FALSE(match(regex, input));
 }
 
+TEST(TestMatch, PlusMatch)
+{
+	std::string regex, input;
+
+	regex = "a+";
+	input = "aaaaaaaaa";
+	EXPECT_TRUE(match(regex, input));
+
+	regex = "a+b";
+	input = "aaaaab";
+	EXPECT_TRUE(match(regex, input));
+
+	regex = "c+d+e";
+	input = "ccde";
+	EXPECT_TRUE(match(regex, input));
+
+	regex = "c+d+e";
+	input = "ccdae";
+	EXPECT_FALSE(match(regex, input));
+
+	regex = "a+";
+	input = "bbbbbb";
+	EXPECT_FALSE(match(regex, input));
+}
 int main(int argc, char** argv)
 {
 	::testing::InitGoogleTest(&argc, argv);

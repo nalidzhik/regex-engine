@@ -171,6 +171,11 @@ bool matchStar(string& regex, string& input)
 	return matchMultiple(regex, input, -1, -1);
 }
 
+bool matchPlus(string& regex, string& input)
+{
+	return matchMultiple(regex, input, 1, -1);
+}
+
 bool matchRegex(string& regex, string& input)
 {
 	if (regex.size() == 0)
@@ -183,6 +188,10 @@ bool matchRegex(string& regex, string& input)
 	if (isStar(result.oper))
 	{
 		return matchStar(regex, input);
+	}
+	else if (isPlus(result.oper))
+	{
+		return matchPlus(regex, input);
 	}
 
 	if (isUnit(regex))
