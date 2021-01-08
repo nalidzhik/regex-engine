@@ -1,3 +1,18 @@
+/**
+*
+* Solution to course project # 7
+* Introduction to programming course
+* Faculty of Mathematics and Informatics of Sofia University
+* Winter semester 2020/2021
+*
+* @author Nazife Alidzhik
+* @idnumber 62598
+* @compiler VC
+*
+* <file with all functions>
+*
+*/
+
 #include <iostream>
 #include <string>
 #include <fstream>
@@ -117,7 +132,7 @@ bool doesUnitMatch(string& regex, string& input)
 	}
 	else if (isEscapeSequence(head))
 	{
-
+		return false;
 	}
 
 	return false;
