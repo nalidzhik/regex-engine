@@ -171,6 +171,27 @@ TEST(TestMatch, QuestionMatch)
 	EXPECT_TRUE(match(regex, input));
 }
 
+TEST(TestMatch, CombinationMatch)
+{
+	std::string regex, input;
+
+	regex = "^a?dcs.why";
+	input = "adcswwhy";
+	EXPECT_TRUE(match(regex, input));
+
+	regex = "^hello?sesi*q";
+	input = "hellosesiiq";
+	EXPECT_TRUE(match(regex, input));
+
+	regex = "a?aaa?bcdef.";
+	input = "aaaabcdeff";
+	EXPECT_TRUE(match(regex, input));
+
+	regex = "a?aaa?bcdef.";
+	input = "aaaabcdef";
+	EXPECT_FALSE(match(regex, input));
+}
+
 int main(int argc, char** argv)
 {
 	::testing::InitGoogleTest(&argc, argv);
