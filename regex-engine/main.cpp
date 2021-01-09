@@ -20,10 +20,22 @@
 
 using namespace std;
 
+int strlen(string& regex);
+bool isSpecialSymbol(char ch);
+bool isCorrectRegex(string& regex);
+bool hasMoreSpecialSymbols(string& regex);
+
 int main()
 {
 	string regex;
 	cin >> regex;
+	bool validate = isCorrectRegex(regex);
+	bool validateSymbols = hasMoreSpecialSymbols(regex);
+
+	if (!validate || !validateSymbols)
+	{
+		cout << "Error in input regex" << endl;
+	}
 
 	string filepath;
 	cin >> filepath;
@@ -57,4 +69,51 @@ int main()
 	delete[] line;
 
 	return 0;
+}
+
+int strlen(string& regex)
+{
+	int counter = 0;
+	while (regex[counter] != '\0')
+	{
+		++counter;
+	}
+	return counter;
+}
+
+bool isSpecialSymbol(char ch)
+{
+	return ch == '.' || ch == '*' || ch == '+' || ch == '?';
+}
+
+bool isCorrectRegex(string& regex)
+{
+	for (int i = 0;i < strlen(regex) - 1;i++)
+	{
+		if (regex[i] == regex[i + 1] && isSpecialSymbol(regex[i]))
+		{
+
+			return false;
+		}
+	}
+
+	return true;
+}
+
+bool hasMoreSpecialSymbols(string& regex)
+{
+	int countSpecialSymbols = 0;
+	for (int i = 0; i < strlen(regex);i++)
+	{
+		if (regex[i] == '*' || regex[i] == '+' || regex[i] == '?')
+		{
+			++countSpecialSymbols;
+		}
+	}
+	if (countSpecialSymbols >= 2)
+	{
+		return false;
+	}
+
+	return true;
 }

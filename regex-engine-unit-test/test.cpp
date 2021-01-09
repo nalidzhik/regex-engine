@@ -9,7 +9,7 @@
 * @idnumber 62598
 * @compiler VC
 *
-* <file with all my tests>
+* <file with all unit tests>
 *
 */
 
